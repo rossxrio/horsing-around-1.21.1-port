@@ -1,6 +1,7 @@
 package dev.horsingaround.client.cosmetic;
 
 import dev.horsingaround.HorsingAround;
+
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -20,6 +21,9 @@ import net.minecraft.resources.ResourceLocation;
  * ({@code art/cowboy_hat.bbmodel}), placed as Blockbench's head view shows it; {@code scripts/hat-model.py} writes the
  * parts below and the texture from it.
  */
+
+
+
 public final class HatModel extends PlayerModel<AbstractClientPlayer> {
 	public static final ModelLayerLocation LAYER = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(HorsingAround.MOD_ID, "cowboy_hat"), "main");
 
@@ -29,12 +33,29 @@ public final class HatModel extends PlayerModel<AbstractClientPlayer> {
 
 	public static LayerDefinition createLayer() {
 		final MeshDefinition mesh = PlayerModel.createMesh(CubeDeformation.NONE, false);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		final PartDefinition root = mesh.getRoot();
 		// (No clearChild yet, and the layers and the ear and cloak are parts of the root: every one replaced by an empty part.)
 		for (final String part : new String[] {"hat", "body", "right_arm", "left_arm", "right_leg", "left_leg", "ear", "cloak", "jacket", "left_sleeve", "right_sleeve", "left_pants", "right_pants"}) {
 			root.addOrReplaceChild(part, CubeListBuilder.create(), PartPose.ZERO);
 		}
 		final PartDefinition head = root.addOrReplaceChild("head", CubeListBuilder.create(), PartPose.ZERO);
+
 		addParts(head, "felt", 0, FELT);
 		addParts(head, "band", BAND_V, BAND);
 		return LayerDefinition.create(mesh, 64, 64);

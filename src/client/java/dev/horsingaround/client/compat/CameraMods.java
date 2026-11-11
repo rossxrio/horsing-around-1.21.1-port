@@ -1,7 +1,17 @@
 package dev.horsingaround.client.compat;
 
 import com.github.exopandora.shouldersurfing.api.client.IShoulderSurfing;
+
+
+
+
+
 import com.github.exopandora.shouldersurfing.api.client.Perspective;
+
+
+
+
+
 import dev.horsingaround.Platform;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -63,6 +73,9 @@ public final class CameraMods {
 	/** Only loaded when Shoulder Surfing Reloaded is. */
 	private static final class ShoulderSurfing {
 		private static IShoulderSurfing instance() {
+
+
+
 			return com.github.exopandora.shouldersurfing.api.client.ShoulderSurfing.getInstance();
 		}
 

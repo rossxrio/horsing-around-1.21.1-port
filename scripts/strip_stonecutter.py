@@ -1,4 +1,5 @@
-"""Flatten Stonecutter-generated sources for one version: drop //? markers and inactive (/* */-wrapped) branches.
+"""Flatten Stonecutter-generated sources for one version: blank out //? markers and inactive (/* */-wrapped) branches,
+keeping every remaining line on its original line number.
 
 Usage: python -I strip_stonecutter.py <generated_root> <out_root>
 Reports any branch it can't classify so it can be checked by hand.
@@ -31,18 +32,26 @@ def first_comment_end(text, start):
 
 
 def strip(text, path, problems):
+    # Removed text (markers, inactive branches) becomes as many empty lines as it spanned, so every line that stays keeps
+    # its line number: the compiled classes then match upstream's byte for byte (line numbers included).
     out = []
     pos = 0
+    drop_start = None
     markers = list(MARKER.finditer(text))
     if not markers:
         return text
+
+    def drop(span):
+        return '\n' * span.count('\n')
+
     for k, m in enumerate(markers):
         if m.start() < pos:
             continue  # inside an inactive region already dropped (nested, /^ ^/-escaped markers)
         mtext = m.group(0).strip()
-        # Text before this marker (from the previous position) is a body of the previous marker, already handled.
-        seg_start = pos
-        out.append(('keep', text[seg_start:m.start()]))
+        if drop_start is not None:
+            out.append(drop(text[drop_start:pos]))
+        out.append(text[pos:m.start()])
+        drop_start = m.start()
         # Drop the marker itself (and its newline if it stood alone on its line).
         end = m.end()
         if end < len(text) and text[end] == '\n':
@@ -83,13 +92,13 @@ def strip(text, path, problems):
                 pos = len(text) if nl < 0 else nl + 1
             elif stripped.startswith('/**'):
                 problems.append(f'{path}: single-line condition before javadoc after "{mtext}"')
-    out.append(('keep', text[pos:]))
-    result = ''.join(t for _, t in out)
-    # Remove lines left with only whitespace where a marker sat at the end of code (e.g. "code */" never happens) and
-    # trailing whitespace on lines.
+    out.append(drop(text[drop_start:pos]))
+    out.append(text[pos:])
+    result = ''.join(out)
+    # (Indentation left before a removed marker.)
     result = re.sub(r'[ \t]+\n', '\n', result)
-    # Collapse 3+ blank lines that removal may leave.
-    result = re.sub(r'\n{3,}', '\n\n', result)
+    if result.count('\n') != text.count('\n'):
+        problems.append(f'{path}: line count changed')
     return result
 
 

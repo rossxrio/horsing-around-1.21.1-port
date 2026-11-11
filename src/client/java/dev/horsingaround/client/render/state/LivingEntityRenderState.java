@@ -1,3 +1,4 @@
+
 package dev.horsingaround.client.render.state;
 
 import net.minecraft.world.entity.LivingEntity;
@@ -37,3 +38,4 @@ public class LivingEntityRenderState {
 		return Mth.rotLerp(partialTicks, entity.yBodyRotO, entity.yBodyRot);
 	}
 }
+

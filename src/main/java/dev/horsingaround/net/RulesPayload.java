@@ -1,13 +1,21 @@
 package dev.horsingaround.net;
 
 import dev.horsingaround.HorsingAround;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+
+
+
+
+
+
 import net.minecraft.resources.ResourceLocation;
 
 /** Server to client on join (and when the host changes settings): this server runs the mod, and its rules. */
+
 public record RulesPayload(int protocol, String version, boolean rideThroughLeaves) implements CustomPacketPayload {
 	public static final Type<RulesPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(HorsingAround.MOD_ID, "rules"));
 	public static final StreamCodec<FriendlyByteBuf, RulesPayload> CODEC = StreamCodec.composite(
@@ -22,3 +30,36 @@ public record RulesPayload(int protocol, String version, boolean rideThroughLeav
 		return TYPE;
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

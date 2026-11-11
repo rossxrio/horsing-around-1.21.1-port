@@ -18,6 +18,11 @@ public final class EmfMixinPlugin implements IMixinConfigPlugin {
 
 	@Override
 	public void onLoad(final String mixinPackage) {
+
+
+
+
+
 	}
 
 	@Override

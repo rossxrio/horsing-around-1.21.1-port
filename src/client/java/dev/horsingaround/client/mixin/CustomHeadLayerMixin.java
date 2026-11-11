@@ -1,3 +1,4 @@
+
 package dev.horsingaround.client.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -27,3 +28,4 @@ public abstract class CustomHeadLayerMixin {
 		}
 	}
 }
+

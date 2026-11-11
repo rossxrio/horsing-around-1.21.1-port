@@ -1,3 +1,4 @@
+
 package dev.horsingaround.client.render;
 
 import dev.horsingaround.client.render.state.EquineRenderState;
@@ -77,3 +78,4 @@ public final class LegacyRenderState {
 		return state instanceof RidePoseState pose && pose.horsingaround$isRider() ? state : null;
 	}
 }
+

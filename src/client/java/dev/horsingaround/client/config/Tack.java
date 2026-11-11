@@ -14,6 +14,13 @@ import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+
+
+
+
+
+
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
@@ -56,6 +63,11 @@ final class Tack {
 
 	static void image(final GuiGraphics graphics, final ResourceLocation texture, final int x, final int y, final float u, final float v, final int width,
 		final int height, final int textureWidth, final int textureHeight) {
+
+
+
+
+
 		graphics.blit(texture, x, y, u, v, width, height, textureWidth, textureHeight);
 	}
 
@@ -74,10 +86,16 @@ final class Tack {
 	}
 
 	static void text(final GuiGraphics graphics, final Font font, final Component text, final int x, final int y, final int color) {
+
+
+
 		graphics.drawString(font, text, x, y, color);
 	}
 
 	private static void centred(final GuiGraphics graphics, final Font font, final Component text, final int centre, final int y, final int color) {
+
+
+
 		graphics.drawCenteredString(font, text, centre, y, color);
 	}
 
@@ -159,15 +177,29 @@ final class Tack {
 
 		abstract void draw(GuiGraphics graphics);
 
+
+
+
+
+
+
 		@Override
 		public void onPress() {
 			this.pressed();
 		}
 
+
+
+
+
+
+
+
 		@Override
 		public void renderWidget(final GuiGraphics graphics, final int mouseX, final int mouseY, final float a) {
 			this.draw(graphics);
 		}
+
 
 		@Override
 		protected void updateWidgetNarration(final NarrationElementOutput output) {
@@ -353,6 +385,9 @@ final class Tack {
 			final int centre = this.getX() + this.getWidth() / 2;
 			int y = this.getY() + (this.rows() * ROW - 5 - this.lines.size() * LINE) / 2 + 1;
 			for (final FormattedCharSequence line : this.lines) {
+
+
+
 				graphics.drawCenteredString(font(), line, centre, y, TEXT_QUIET);
 				y += LINE;
 			}

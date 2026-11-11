@@ -31,9 +31,39 @@ public abstract class HudMixin {
 	@Final
 	private Minecraft minecraft;
 
+
+
+
 	@ModifyExpressionValue(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/CameraType;isFirstPerson()Z"))
 	private boolean horsingaround$shoulderCrosshair(final boolean firstPerson) {
 		return firstPerson || RideCamera.isOverShoulder(this.minecraft.getCameraEntity(), this.minecraft);
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

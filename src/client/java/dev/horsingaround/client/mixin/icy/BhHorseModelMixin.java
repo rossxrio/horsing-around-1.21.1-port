@@ -103,5 +103,21 @@ public abstract class BhHorseModelMixin {
 		SaddleMotion.measure(ride, this.body, initial.x, initial.y - SADDLE_UP, initial.z);
 		ride.animatedWholeRear = false;
 		AnimatedHorseModel.fitLegs(this.frontLeftLeg, this.backLeftLeg, ride);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	}
 }

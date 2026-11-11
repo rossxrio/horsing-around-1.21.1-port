@@ -27,6 +27,12 @@ final class RiderKeys implements RiderBridge {
 		this.minecraft = minecraft;
 	}
 
+
+
+
+
+
+
 	// Before 1.21.2 the keys are fields of the player's input object, kept for as long as the player is; a view of them is
 	// made once for it.
 	private LocalInput view;
@@ -70,6 +76,7 @@ final class RiderKeys implements RiderBridge {
 			return this.source.right;
 		}
 	}
+
 
 	@Override
 	public int forwardPresses() {

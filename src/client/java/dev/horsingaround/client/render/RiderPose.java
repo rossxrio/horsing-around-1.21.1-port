@@ -5,15 +5,27 @@ import static dev.horsingaround.ride.RideTuning.*;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import dev.horsingaround.client.render.state.HumanoidRenderState;
+
 import net.minecraft.core.component.DataComponents;
+
+
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
+
+
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.ProjectileWeaponItem;
+
+
+
+
+
 import net.minecraft.world.item.TridentItem;
+
+
 import org.joml.Vector3f;
 import org.jetbrains.annotations.Nullable;
 
@@ -146,6 +158,9 @@ public final class RiderPose {
 			// Vanilla's swing, played from where the arm rests, so it starts and ends there.
 			final ModelPart part = side == HumanoidArm.LEFT ? model.leftArm : model.rightArm;
 			final float swing = swing(state);
+
+
+
 			final float lift = Mth.sin((1.0F - Mth.square(Mth.square(1.0F - swing))) * Mth.PI);
 			final float reach = Mth.sin(swing * Mth.PI) * -(model.head.xRot - 0.7F) * 0.75F;
 			part.xRot -= lift * 1.2F + reach;
@@ -179,9 +194,17 @@ public final class RiderPose {
 
 	/** A tool or a weapon (a sword, an axe, a pickaxe, a mace, a trident, a spear, a bow...), held out ready off the reins. */
 	private static boolean weapon(final ItemStack stack) {
+
 		return stack.has(DataComponents.TOOL)
+
+
+
 			|| stack.getItem() instanceof TridentItem
 			|| stack.getItem() instanceof ProjectileWeaponItem;
+
+
+
+
 	}
 
 	/** The torso's turn in a whack, as vanilla swings it (mirrored for the left arm). */
@@ -303,28 +326,46 @@ public final class RiderPose {
 		}
 	}
 
+
 	/** The pose of an arm, as the render state has it (1.21.2 and 1.21.3: the model works it out from the state; before, it keeps it). */
 	private static HumanoidModel.ArmPose armPose(final HumanoidModel<?> model, final HumanoidRenderState state, final HumanoidArm side) {
+
+
+
+
+
 		return side == HumanoidArm.LEFT ? model.leftArmPose : model.rightArmPose;
 	}
 
 	/** The stack in an arm, as the render state has it (before 1.21.11, as noted when the state was extracted). */
 	private static ItemStack held(final HumanoidRenderState state, final HumanoidArm side) {
+
+
+
 		return ((RidePoseState) state).horsingaround$held(side);
 	}
 
 	/** The stack in an entity's arm (what the render state was given before 1.21.11, see {@link #held}). */
 	public static ItemStack heldBy(final LivingEntity entity, final HumanoidArm side) {
+
+
+
 		return side == entity.getMainArm() ? entity.getMainHandItem() : entity.getOffhandItem();
 	}
 
 	/** Ticks the item in use has been drawn, with the part-tick. */
 	private static float drawTicks(final HumanoidRenderState state) {
+
+
+
 		return ((RidePoseState) state).horsingaround$usingTicks();
 	}
 
 	/** How long {@code entity} has been using its item, with the part-tick (0 when it isn't). */
 	public static float usingTicks(final LivingEntity entity, final float partialTicks) {
+
+
+
 		return entity.isUsingItem() ? entity.getTicksUsingItem() + partialTicks : 0.0F;
 	}
 
@@ -332,20 +373,33 @@ public final class RiderPose {
 
 	/** How far through its swing the swinging arm is (0 when not swinging). */
 	private static float swing(final HumanoidRenderState state) {
+
+
+
 		return state.attackTime;
 	}
 
 	/** The arm swinging, or null. */
 	private static @Nullable HumanoidArm swingArm(final HumanoidRenderState state) {
+
+
+
 		return state.attackTime > 0.0F ? state.attackArm : null;
 	}
 
 	private static SwingAnimationType swingType(final HumanoidRenderState state) {
+
+
+
+
+
 		return SwingAnimationType.WHACK;
 	}
+
 
 	// Spears came in 1.21.11: before, every swing is the plain one.
 	private enum SwingAnimationType {
 		NONE, WHACK, STAB
 	}
+
 }

@@ -1,3 +1,4 @@
+
 package dev.horsingaround.client.render.state;
 
 import net.minecraft.world.InteractionHand;
@@ -26,3 +27,4 @@ public class HumanoidRenderState extends LivingEntityRenderState {
 		this.isUsingItem = entity.isUsingItem();
 	}
 }
+

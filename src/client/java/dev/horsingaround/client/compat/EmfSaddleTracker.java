@@ -1,3 +1,4 @@
+
 package dev.horsingaround.client.compat;
 
 import dev.horsingaround.HorsingAround;
@@ -48,3 +49,4 @@ public final class EmfSaddleTracker extends EMFAnimationApi.EMFAnimationHook {
 		}
 	}
 }
+

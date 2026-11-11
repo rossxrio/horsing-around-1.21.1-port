@@ -53,6 +53,9 @@ public final class IcyCompat {
 
 	/** A horse Icy's mod has its own hooks on. */
 	public static boolean icyHorse(final Entity horse) {
+
+
+
 		return LOADED && horse.getType().is(ICY_HORSES);
 	}
 

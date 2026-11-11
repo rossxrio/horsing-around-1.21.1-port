@@ -28,10 +28,12 @@ public abstract class ArchetypePerksMixin {
 		if (horse.getControllingPassenger() == null || RideStateHolder.managedRide(horse) == null) {
 			return;
 		}
+
 		final AttributeInstance speed = horse.getAttribute(Attributes.MOVEMENT_SPEED);
 		if (speed != null) {
 			speed.removeModifier(ROAD);
 		}
+
 		ci.cancel();
 	}
 }

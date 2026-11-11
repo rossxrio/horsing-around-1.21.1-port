@@ -83,7 +83,13 @@ public final class Trample {
 		final DamageSource source = level.damageSources().mobAttack(horse);
 		for (final Entity entity : victims) {
 			final LivingEntity victim = (LivingEntity) entity;
+
+
+
 			if (victim.hurt(source, hit)) {
+
+
+
 				victim.knockback(knock, horse.getX() - victim.getX(), horse.getZ() - victim.getZ());
 			}
 		}

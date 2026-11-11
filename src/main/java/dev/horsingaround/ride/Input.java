@@ -1,3 +1,4 @@
+
 package dev.horsingaround.ride;
 
 // Before 1.21.2 the keys a player holds are only in a client class (net.minecraft.client.player.Input), which common code
@@ -22,3 +23,4 @@ public interface Input {
 		return false;
 	}
 }
+

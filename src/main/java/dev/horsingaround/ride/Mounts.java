@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
+
 import net.minecraft.world.entity.EntityType;
 
 /**
@@ -37,6 +38,9 @@ public final class Mounts {
 	}
 
 	public static boolean manages(final Entity horse) {
+
+
+
 		return horse.getType().is(MANAGED) && (!horse.level().isClientSide() || ServerRules.present) && !IcyCompat.icyRides(horse.level());
 	}
 
@@ -46,6 +50,11 @@ public final class Mounts {
 	 * floats every horse but the skeleton horse there.)
 	 */
 	public static boolean floats(final Entity horse) {
+
+
+
+
+
 		return horse.getType() != EntityType.SKELETON_HORSE;
 	}
 }

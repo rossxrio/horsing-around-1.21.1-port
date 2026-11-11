@@ -4,8 +4,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dev.horsingaround.client.render.RidePoseState;
 import dev.horsingaround.ride.RideState;
 import dev.horsingaround.client.render.state.LivingEntityRenderState;
+
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.ItemStack;
+
 import org.joml.Quaternionf;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -102,6 +104,7 @@ public class LivingEntityRenderStateMixin implements RidePoseState {
 		this.horsingaround$twist = twistRadians;
 	}
 
+
 	@Unique
 	private ItemStack horsingaround$heldRight = ItemStack.EMPTY;
 	@Unique
@@ -125,6 +128,7 @@ public class LivingEntityRenderStateMixin implements RidePoseState {
 	public float horsingaround$usingTicks() {
 		return this.horsingaround$usingTicks;
 	}
+
 
 	@Override
 	public boolean horsingaround$isRider() {

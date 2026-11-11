@@ -7,8 +7,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+
+
+
+
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.gui.navigation.CommonInputs;
+
 import net.minecraft.network.chat.Component;
 
 /** A row of colour swatches for the hat; the hat's colour now is outlined, if it is one of them. Arrow keys move along it, Enter or Space picks. */
@@ -55,15 +60,29 @@ final class HatPaletteWidget extends AbstractWidget {
 		}
 	}
 
+
+
+
+
+
+
 	@Override
 	public void onClick(final double mouseX, final double mouseY) {
 		this.click(mouseX);
 	}
 
+
+
+
+
+
+
+
 	@Override
 	public boolean keyPressed(final int keyCode, final int scanCode, final int modifiers) {
 		return this.key(keyCode == InputConstants.KEY_LEFT, keyCode == InputConstants.KEY_RIGHT, CommonInputs.selected(keyCode));
 	}
+
 
 	/** Arrows move the cursor (past the ends they are left to the screen's own navigation), Enter or Space picks its colour. */
 	private boolean key(final boolean left, final boolean right, final boolean select) {

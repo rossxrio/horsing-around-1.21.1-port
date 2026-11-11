@@ -6,6 +6,7 @@ import dev.horsingaround.client.RideAim;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
+
 import net.minecraft.client.renderer.GameRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 
@@ -14,6 +15,9 @@ import org.spongepowered.asm.mixin.Mixin;
  * targeting runs with the rider's eyes turned toward it for the moment. The game picks in {@code Minecraft} from 26.1,
  * in {@code GameRenderer} before.
  */
+
+
+
 @Mixin(GameRenderer.class)
 public abstract class PickMixin {
 	@WrapMethod(method = "pick(F)V")
@@ -43,7 +47,10 @@ public abstract class PickMixin {
 			if (picked != null && (picked == player.getVehicle() || picked.isPassengerOfSameVehicle(player))) {
 				// From the rider's eyes the line toward the crosshair's target can pass through the horse's own head or neck: the
 				// game would target the horse (showing the attack indicator over nothing). The block beyond, in reach, instead.
+
 				final double reach = player.blockInteractionRange();
+
+
 				minecraft.crosshairPickEntity = null;
 				minecraft.hitResult = player.pick(reach, partialTicks, false);
 				RideAim.horsePicks++;

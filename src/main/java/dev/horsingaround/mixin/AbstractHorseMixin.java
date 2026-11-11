@@ -81,6 +81,11 @@ public abstract class AbstractHorseMixin extends Animal implements RideStateHold
 	@Shadow
 	protected abstract @Nullable SoundEvent getAngrySound();
 
+
+
+
+
+
 	@Override
 	public RideState horsingaround$ride() {
 		return this.horsingaround$ride;
@@ -105,6 +110,13 @@ public abstract class AbstractHorseMixin extends Animal implements RideStateHold
 	public @Nullable SoundEvent horsingaround$angrySound() {
 		return this.getAngrySound();
 	}
+
+
+
+
+
+
+
 
 	/** First ridden hook each tick: advance the ride simulation and hand vanilla a forward/back-only input. */
 	@ModifyReturnValue(method = "getRiddenInput", at = @At("RETURN"))
@@ -190,11 +202,17 @@ public abstract class AbstractHorseMixin extends Animal implements RideStateHold
 			x -= Mth.sin(yaw) * push;
 			z += Mth.cos(yaw) * push;
 		}
+
 		final double power = this.getJumpPower(amount);
+
+
 		this.setDeltaMovement(x, Math.max(Math.max(power, RideTuning.JUMP_MIN_VELOCITY), s.jumpLift), z);
 		s.jumpLift = 0.0F;
 		this.setOnGround(false);
 		this.horsingaround$ride.jumpedOff = true;
+
+
+
 		this.hasImpulse = true;
 	}
 

@@ -10,6 +10,7 @@ import dev.horsingaround.ride.RideStateHolder;
 import net.minecraft.client.Minecraft;
 import dev.horsingaround.client.render.state.LivingEntityRenderState;
 import net.minecraft.util.Mth;
+
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -96,7 +97,10 @@ public final class RidePoser {
 			if (roll != 0.0F) {
 				final float half = roll * 0.5F * Mth.DEG_TO_RAD;
 				final float heading = cart.horsingaround$yaw(partialTicks) * Mth.DEG_TO_RAD;
+
 				final float seat = (float) entity.getVehicleAttachmentPoint(entity.getVehicle()).y;
+
+
 				pose.horsingaround$setPose(0.0F, 0.0F, 0.0F, -Mth.sin(heading) * Mth.sin(half), 0.0F, Mth.cos(heading) * Mth.sin(half), Mth.cos(half), 0.0F, seat, 0.0F);
 			}
 			pose.horsingaround$setNeck(0.0F);
@@ -122,6 +126,7 @@ public final class RidePoser {
 				shake == 0.0F ? 0.0F : -Mth.sin(SHAKE_PHASE[0]) * HEAD_SHAKE_YAW * shake,
 				shake == 0.0F ? 0.0F : Mth.cos(SHAKE_PHASE[0]) * HEAD_SHAKE_ROLL * shake
 			);
+
 			// (Before 26.3 a rider seen in first person isn't drawn, so nothing works out the room: the neck and seat let go
 			// instead of staying where they were.)
 			final net.minecraft.client.Minecraft minecraft = net.minecraft.client.Minecraft.getInstance();
@@ -132,6 +137,7 @@ public final class RidePoser {
 				s.sitBackRate = ease(s.sitBackRate, s.sitBack, 0.0F, dt);
 				s.sitBack = Math.max(s.sitBack + s.sitBackRate * dt, 0.0F);
 			}
+
 			pose.horsingaround$setNeck(packAnimated ? 0.0F : neckCounter(pitch) + s.neckReach);
 			// Hooves on the ground; a pack-animated model gets them in the Entity Model Features hook too.
 			if (packAnimated) {
@@ -216,6 +222,7 @@ public final class RidePoser {
 		s.riderLegs = legPitch;
 		s.riderPelvis = pelvis;
 		s.riderHands = -lift * HAND_BOB;
+
 		pose.horsingaround$setHeld(RiderPose.heldBy(entity, HumanoidArm.RIGHT), RiderPose.heldBy(entity, HumanoidArm.LEFT), RiderPose.usingTicks(entity, partialTicks));
 	}
 

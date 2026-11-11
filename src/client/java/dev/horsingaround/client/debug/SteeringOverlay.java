@@ -5,6 +5,11 @@ import dev.horsingaround.ride.RideStateHolder;
 import dev.horsingaround.ride.RideTuning;
 import java.util.Locale;
 import net.minecraft.client.Minecraft;
+
+
+
+
+
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.phys.Vec3;
@@ -25,6 +30,63 @@ public final class SteeringOverlay {
 
 	/** Called at the end of each client tick, while that tick's gizmos are being collected. */
 	public static void tick(final Minecraft minecraft) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

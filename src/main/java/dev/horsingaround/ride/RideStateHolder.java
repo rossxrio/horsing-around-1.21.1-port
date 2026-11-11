@@ -22,4 +22,8 @@ public interface RideStateHolder {
 	/** The horse's own angry snort (horse, donkey, mule...), or null. */
 	@Nullable SoundEvent horsingaround$angrySound();
 
+
+
+
+
 }

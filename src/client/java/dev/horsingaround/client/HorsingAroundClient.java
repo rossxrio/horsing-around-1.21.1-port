@@ -3,6 +3,7 @@ package dev.horsingaround.client;
 import dev.horsingaround.HorsingAround;
 import dev.horsingaround.Platform;
 import com.mojang.blaze3d.platform.InputConstants;
+
 import dev.horsingaround.client.compat.EmfSaddleTracker;
 import dev.horsingaround.client.config.HorseSettingsScreen;
 import dev.horsingaround.client.debug.SteeringOverlay;
@@ -21,6 +22,12 @@ import org.slf4j.LoggerFactory;
 public final class HorsingAroundClient {
 	private static final Logger LOGGER = LoggerFactory.getLogger(HorsingAround.MOD_ID);
 
+
+
+
+
+
+
 	private static final String KEY_CATEGORY = "key.category.horsingaround.horses";
 	/** The loader registers these (they're left unbound or on O, the defaults). */
 	public static final KeyMapping SETTINGS_KEY = new KeyMapping("key.horsingaround.settings", InputConstants.UNKNOWN.getValue(), KEY_CATEGORY);
@@ -34,6 +41,7 @@ public final class HorsingAroundClient {
 	public static void init() {
 		keys = new RiderKeys(Minecraft.getInstance());
 		HorsingAround.bridge = keys;
+
 		if (Platform.isModLoaded("entity_model_features")) {
 			try {
 				EmfSaddleTracker.register();
@@ -42,6 +50,7 @@ public final class HorsingAroundClient {
 				LOGGER.warn("Could not hook Entity Model Features animations; riders follow a generated gait motion instead", e);
 			}
 		}
+
 		// The supporters' cowboy hat.
 		Supporters.load();
 	}

@@ -18,15 +18,18 @@ import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 
 /** NeoForge's entry point (the client's is client/neoforge/HorsingAroundNeoForgeClient). */
 @Mod(HorsingAround.MOD_ID)
 public final class HorsingAroundNeoForge {
+
 	// The client entry point's handlers for the payloads to the client (NeoForge for 1.21.1 takes them with the types).
 	public static IPayloadHandler<RulesPayload> clientRules = (rules, context) -> {};
 	public static IPayloadHandler<StylePayload> clientStyle = (style, context) -> {};
 	public static IPayloadHandler<PlayerHatPayload> clientHats = (hat, context) -> {};
+
 
 	public HorsingAroundNeoForge(final IEventBus modBus) {
 		HorsingAround.init();
@@ -46,9 +49,15 @@ public final class HorsingAroundNeoForge {
 		// Optional: players without the mod still join a server with it, and players with it join servers without it
 		// (and ride vanilla there). The client's handlers are the client entry point's.
 		event.registrar("1").optional()
+
+
+
+
+
 			.playToClient(RulesPayload.TYPE, RulesPayload.CODEC, (rules, context) -> clientRules.handle(rules, context))
 			.playToClient(StylePayload.TYPE, StylePayload.CODEC, (style, context) -> clientStyle.handle(style, context))
 			.playToClient(PlayerHatPayload.TYPE, PlayerHatPayload.CODEC, (hat, context) -> clientHats.handle(hat, context))
+
 			.playToServer(HatPayload.TYPE, HatPayload.CODEC, (hat, context) -> HatRelay.receive((ServerPlayer) context.player(), hat));
 	}
 }

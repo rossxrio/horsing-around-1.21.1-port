@@ -146,7 +146,10 @@ public abstract class HorseCartEntityMixin implements CartTrail.Lean {
 			return;
 		}
 		final Vec3 seat = cir.getReturnValue();
+
 		final Vec3 riding = passenger.getVehicle() == null ? Vec3.ZERO : passenger.getVehicleAttachmentPoint(passenger.getVehicle());
+
+
 		final float yaw = horsingaround$yaw(partialTick) * Mth.DEG_TO_RAD;
 		final double leftX = Mth.cos(yaw);
 		final double leftZ = Mth.sin(yaw);

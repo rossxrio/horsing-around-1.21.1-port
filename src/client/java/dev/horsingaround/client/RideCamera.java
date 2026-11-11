@@ -215,6 +215,8 @@ public final class RideCamera {
 			final UseAnim animation = rider.getUseItem().getUseAnimation();
 			return animation == UseAnim.BOW
 				|| animation == UseAnim.CROSSBOW
+
+
 				|| animation == UseAnim.SPEAR
 				|| animation == UseAnim.SPYGLASS;
 		}

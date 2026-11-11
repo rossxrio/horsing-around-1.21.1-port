@@ -4,24 +4,38 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dev.horsingaround.client.compat.ShaderShadows;
 import dev.horsingaround.client.render.RidePoseState;
 import dev.horsingaround.client.render.RidePoser;
+
 import dev.horsingaround.client.render.LegacyRenderState;
 import dev.horsingaround.ride.RideState;
+
+
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.phys.Vec3;
+
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import dev.horsingaround.client.render.state.LivingEntityRenderState;
+
+
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /** Poses horses and their riders as they are drawn (worked out in {@link RidePoser}). */
 @Mixin(LivingEntityRenderer.class)
 public abstract class LivingEntityRendererMixin {
+
+
+
+
+
+
 	// Before 1.21.2 there are no render states: the renderer draws the entity itself, so a stand-in state is filled from
 	// it as drawing starts (only for a ridden horse and its rider, the rest are left alone), and the model and layer
 	// hooks find it in LegacyRenderState while this entity is drawn.
@@ -87,19 +101,35 @@ public abstract class LivingEntityRendererMixin {
 		return rider != null ? rider.yRot : headYaw;
 	}
 
+
 	@Inject(
+
+
+
+
+
 		method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
 		at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;pushPose()V", shift = At.Shift.AFTER, ordinal = 0)
 	)
 	private void horsingaround$applyPose(
+
+
+
 		final LivingEntity entity, final float yaw, final float partialTicks, final PoseStack poseStack,
+
+
+
 		final MultiBufferSource buffers, final int lightCoords,
 		final CallbackInfo ci
 	) {
+
+
+
 		final LivingEntityRenderState state = LegacyRenderState.state();
 		if (state != null) {
 			((RidePoseState) state).horsingaround$applyPose(poseStack);
 		}
+
 	}
 
 	/**
@@ -108,26 +138,55 @@ public abstract class LivingEntityRendererMixin {
 	 * asks whether the body shows, so the legs would read the frame before's, or a horse inventory's preview).
 	 */
 	@Inject(
+
+
+
+
+
 		method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
 		at = @At(
 			value = "INVOKE",
+
+
+
+
+
 			target = "Lnet/minecraft/client/model/EntityModel;setupAnim(Lnet/minecraft/world/entity/Entity;FFFFF)V"
 		)
 	)
 	private void horsingaround$drawnPose(
+
+
+
 		final LivingEntity entity, final float yaw, final float partialTicks, final PoseStack poseStack,
+
+
+
 		final MultiBufferSource buffers, final int lightCoords,
 		final CallbackInfo ci
 	) {
+
 		final LivingEntityRenderState state = LegacyRenderState.state();
 		final RideState ride = state == null ? null : ((RidePoseState) state).horsingaround$rideState();
 		// (Not from a shader pack's shadow pass: its pose stack has the sun's view in it.)
 		if (ride != null && !ShaderShadows.drawing()) {
+
+
+
+
+
+
 			ride.drawnPose.set(poseStack.last().pose());
+
+
+
+
+
 			final Vec3 camera = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
 			ride.drawnCameraX = camera.x;
 			ride.drawnCameraY = camera.y;
 			ride.drawnCameraZ = camera.z;
+
 			ride.drawnPoseSet = true;
 		}
 	}

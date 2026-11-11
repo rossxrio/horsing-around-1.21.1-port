@@ -39,6 +39,9 @@ final class ServerNotice {
 		final Component message = theirs == null
 			? Component.translatable("message.horsingaround.server_missing")
 			: Component.translatable("message.horsingaround.server_mismatch", theirs, HorsingAround.version());
+
+
+
 		minecraft.gui.setOverlayMessage(message, false);
 	}
 }

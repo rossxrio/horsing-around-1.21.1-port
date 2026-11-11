@@ -19,10 +19,16 @@ public abstract class LocalPlayerMixin {
 		return RideStateHolder.managedRide(((LocalPlayer) (Object) this).getVehicle()) != null ? 1 : cooldown;
 	}
 
+
+
+
 	@ModifyExpressionValue(method = {"sendPosition", "tick"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getYRot()F"))
 	private float horsingaround$reportYaw(final float yaw) {
 		return RideAim.isActive() ? RideAim.yaw() : yaw;
 	}
+
+
+
 
 	@ModifyExpressionValue(method = {"sendPosition", "tick"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getXRot()F"))
 	private float horsingaround$reportPitch(final float pitch) {

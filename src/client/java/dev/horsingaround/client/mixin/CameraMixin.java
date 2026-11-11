@@ -4,8 +4,13 @@ import dev.horsingaround.client.RideCamera;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.client.Camera;
+
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
+
+
+
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -24,16 +29,30 @@ public abstract class CameraMixin {
 	private @Nullable Entity entity;
 	@Shadow
 	private boolean detached;
+
+
+
+
+
 	// Set in the constructor hook below: Mixin drops an initialiser here (javac numbers the constructor's return after it,
 	// so Mixin takes it for constructor body), which left this null and crashed the first ridden frame.
 	@Unique
 	private Minecraft minecraft;
 	@Shadow
 	private boolean initialized;
+
+
 	@Shadow
 	private float partialTickTime;
+
+
+
+
+
+
 	@Shadow
 	private BlockGetter level;
+
 	@Shadow
 	private Vec3 position;
 	@Shadow
@@ -51,15 +70,54 @@ public abstract class CameraMixin {
 	@Shadow
 	protected abstract void setPosition(double x, double y, double z);
 
+
 	@Inject(method = "<init>", at = @At("RETURN"))
 	private void horsingaround$init(final CallbackInfo ci) {
 		this.minecraft = Minecraft.getInstance();
 	}
 
+
+
+
+
+
+
+
+
+
+
 	/**
 	 * Places the third-person camera while riding (over the shoulder or centred, instead of vanilla's placement). Another
 	 * camera mod that is driving the camera (see {@link RideCamera#isActive}) is left alone.
 	 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	@WrapMethod(method = "setup")
 	private void horsingaround$rideCamera(
 		final BlockGetter level, final Entity e, final boolean detached, final boolean mirrored, final float partialTicks, final Operation<Void> original
@@ -75,6 +133,8 @@ public abstract class CameraMixin {
 		original.call(level, e, detached, mirrored, partialTicks);
 	}
 
+
+
 	// The third-person ride camera in place of vanilla's setup (the rest of what setup does is set here).
 	@Unique
 	private void horsingaround$place(final Entity e, final float partialTicks) {
@@ -84,6 +144,7 @@ public abstract class CameraMixin {
 		this.partialTickTime = partialTicks;
 		this.horsingaround$placeRide(e, partialTicks);
 	}
+
 
 	/** The third-person riding camera's rotation and place (see {@link RideCamera#place}). */
 	@Unique
@@ -100,10 +161,22 @@ public abstract class CameraMixin {
 	 * the rider's drawn head, which already rides the saddle: on top of that, every step's easing moved the view again, into
 	 * the horse on the way up.
 	 */
+
+
+
+
+
+
+
+
+
+
+
 	@Inject(method = "setup", at = @At("RETURN"))
 	private void horsingaround$eyes(final BlockGetter level, final Entity e, final boolean detached, final boolean mirrored, final float partialTicks, final CallbackInfo ci) {
 		this.horsingaround$firstPerson(partialTicks);
 	}
+
 
 	@Unique
 	private void horsingaround$firstPerson(final float partialTicks) {

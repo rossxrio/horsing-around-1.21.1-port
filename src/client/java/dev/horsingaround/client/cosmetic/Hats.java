@@ -7,7 +7,14 @@ import dev.horsingaround.ride.HorseConfig;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+
+
 import net.minecraft.client.multiplayer.ClientPacketListener;
+
+
+
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -68,10 +75,21 @@ public final class Hats {
 
 	/** Tells the server what we're wearing (on joining and after changing it in the settings). */
 	public static void sendOwn() {
+
+
+
+
+
 		final ClientPacketListener connection = Minecraft.getInstance().getConnection();
 		if (ServerRules.present && connection != null && connection.hasChannel(HatPayload.TYPE)) {
 			connection.send(new HatPayload(canWear() ? ownHat() : HatPayload.NONE));
 		}
+
+
+
+
+
+
 	}
 
 	public static void clear() {

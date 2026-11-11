@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.function.IntConsumer;
 import net.minecraft.client.gui.GuiGraphics;
+
 import net.minecraft.client.gui.components.OptionsList;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import dev.horsingaround.net.ServerRules;
@@ -21,6 +22,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
+
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.options.OptionsSubScreen;
@@ -91,18 +93,31 @@ public final class HorseSettingsScreen extends OptionsSubScreen {
 	}
 
 	public static void open(final Minecraft minecraft, final Tab tab) {
+
+
+
 		show(minecraft, minecraft.screen, tab);
 	}
 
 	private static void show(final Minecraft minecraft, final Screen parent, final Tab tab) {
+
+
+
 		minecraft.setScreen(new HorseSettingsScreen(parent, tab));
 	}
 
+
 	/** The options list, on the frame's boards rather than the game's own list background and separators. */
 	private static final class TackList extends OptionsList {
+
 		TackList(final Minecraft minecraft, final int width, final OptionsSubScreen screen) {
 			super(minecraft, width, screen);
 		}
+
+
+
+
+
 
 		void clear() {
 			this.clearEntries();
@@ -117,6 +132,44 @@ public final class HorseSettingsScreen extends OptionsSubScreen {
 		}
 	}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	@Override
 	protected void addTitle() {
 		// (The title itself goes on the beam, with the frame.)
@@ -127,14 +180,19 @@ public final class HorseSettingsScreen extends OptionsSubScreen {
 	@Override
 	protected void repositionElements() {
 		super.repositionElements();
+
+
 		this.placeTabs();
 	}
+
+
 
 	@Override
 	protected void addContents() {
 		this.list = this.layout.addToContents(new TackList(this.minecraft, this.width, this));
 		this.addOptions();
 	}
+
 
 	private void addTabs() {
 		this.tabTags.clear();
@@ -166,9 +224,13 @@ public final class HorseSettingsScreen extends OptionsSubScreen {
 	}
 
 	private void refill() {
+
 		((TackList) this.list).clear();
+
+
 		this.addOptions();
 	}
+
 
 	@Override
 	public void renderBackground(final GuiGraphics graphics, final int mouseX, final int mouseY, final float a) {
@@ -177,6 +239,7 @@ public final class HorseSettingsScreen extends OptionsSubScreen {
 		}
 		this.drawFrame(graphics);
 	}
+
 
 	/**
 	 * Whether the world shows behind the options, sharp and undimmed, with the frame's boards left out there: on the camera
@@ -223,7 +286,9 @@ public final class HorseSettingsScreen extends OptionsSubScreen {
 		Tack.boards(graphics, Tack.WOOD, x, top, POST, bottom - top);
 	}
 
+
 	@Override
+
 	protected void addOptions() {
 		final HorseConfig c = HorseConfig.get();
 		switch (this.tab) {
@@ -295,7 +360,12 @@ public final class HorseSettingsScreen extends OptionsSubScreen {
 		if (!Hats.canWear()) {
 			this.addHeading("hat");
 			this.addNote(Component.translatable(KEY + "hat.support.note"));
+
 			final Button.OnPress open = ConfirmLinkScreen.confirmLink(this, SUPPORT, true);
+
+
+
+
 			// (The game's handler never looks at which button was pressed.)
 			this.addWide(new Tack.Patch(WIDE, () -> Component.translatable(KEY + "hat.support"), Component.translatable(KEY + "hat.support.tooltip"), true, () -> open.onPress(null)));
 			return;
@@ -330,6 +400,9 @@ public final class HorseSettingsScreen extends OptionsSubScreen {
 	}
 
 	private void refillKeepingScroll() {
+
+
+
 		final double scroll = this.list.getScrollAmount();
 		this.refill();
 		this.list.setScrollAmount(scroll);
@@ -350,8 +423,12 @@ public final class HorseSettingsScreen extends OptionsSubScreen {
 
 	/** A full-width widget in its own row (before 26.2 the list only took options as big rows, so it is a lone small one). */
 	private void addWide(final AbstractWidget widget) {
+
+
+
 		widget.setWidth(WIDE);
 		this.list.addSmall(widget, null);
+
 	}
 
 	/** A hat colour slider: changes the colour live (sent to the server when the screen closes). */
@@ -359,12 +436,26 @@ public final class HorseSettingsScreen extends OptionsSubScreen {
 		return new Tack.Strap(width, min, max, value, amount -> value(id, Component.translatable(KEY + unit, amount)), tooltip(id), set);
 	}
 
+
 	@Override
 	protected void addFooter() {
 		final LinearLayout footer = this.layout.addToFooter(LinearLayout.horizontal().spacing(8));
 		footer.addChild(new Tack.Patch(SMALL, () -> Component.translatable(KEY + "reset"), null, false, this::reset));
 		footer.addChild(new Tack.Patch(SMALL, () -> CommonComponents.GUI_DONE, null, true, this::onClose));
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	private void reset() {
 		HorseConfig.reset();

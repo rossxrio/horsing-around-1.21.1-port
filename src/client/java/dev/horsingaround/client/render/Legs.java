@@ -171,12 +171,28 @@ public final class Legs {
 		if (cube.maxX > cube.minX && cube.maxY > cube.minY && cube.maxZ > cube.minZ) {
 			return axis == 0 ? (least ? cube.minX : cube.maxX) : axis == 1 ? (least ? cube.minY : cube.maxY) : least ? cube.minZ : cube.maxZ;
 		}
+
+
+
+
+
+
+
+
+
+
+
+
+
 		return axis == 0 ? (least ? cube.minX : cube.maxX) : axis == 1 ? (least ? cube.minY : cube.maxY) : least ? cube.minZ : cube.maxZ;
 	}
 
 	/** Whether the box has all six faces (a leg does; a flat plane or a part of a box doesn't). */
 	private static boolean sixSided(final ModelPart.Cube cube) {
 		// (Before 1.21.2 the faces are private; the boxes of vanilla and of animation packs have them all.)
+
+
+
 		return true;
 	}
 }

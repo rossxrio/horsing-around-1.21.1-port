@@ -3,9 +3,11 @@ package dev.horsingaround.client.mixin;
 import dev.horsingaround.client.render.RiderPose;
 import net.minecraft.client.model.PlayerModel;
 import dev.horsingaround.client.render.state.PlayerRenderState;
+
 import dev.horsingaround.client.render.LegacyRenderState;
 import dev.horsingaround.client.render.state.HumanoidRenderState;
 import net.minecraft.world.entity.LivingEntity;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,6 +19,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(value = PlayerModel.class, priority = 1500)
 public abstract class PlayerModelMixin {
+
+
+
+
+
+
 	@Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At("RETURN"))
 	private void horsingaround$riderPose(
 		final LivingEntity entity, final float limbSwing, final float limbSwingAmount, final float ageInTicks, final float headYaw, final float headPitch,
@@ -34,4 +42,5 @@ public abstract class PlayerModelMixin {
 			model.rightPants.copyFrom(model.rightLeg);
 		}
 	}
+
 }

@@ -1,5 +1,6 @@
 package dev.horsingaround.mixin;
 
+
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -21,10 +22,16 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 @Mixin(value = LivingEntity.class, priority = 1500)
 abstract class LivingEntityMixin {
 	/** A player-ridden horse's collision box is narrowed to about its body's real width (vanilla's is a 1.4-block square). */
+
 	@ModifyReturnValue(method = "getDefaultDimensions", at = @At("RETURN"))
+
+
 	private EntityDimensions horsingaround$riddenWidth(final EntityDimensions dimensions) {
 		if ((Object) this instanceof RideStateHolder holder && (holder.horsingaround$ride().narrow || holder.horsingaround$ride().keptNarrow)) {
+
 			return new EntityDimensions(dimensions.width() * RideTuning.RIDDEN_WIDTH_SCALE, dimensions.height(), dimensions.eyeHeight(), dimensions.attachments(), dimensions.fixed());
+
+
 		}
 		return dimensions;
 	}
@@ -36,6 +43,9 @@ abstract class LivingEntityMixin {
 	 */
 	@ModifyArg(
 		method = "updateWalkAnimation",
+
+
+
 		at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/WalkAnimationState;update(FF)V"),
 		index = 0
 	)
@@ -52,6 +62,9 @@ abstract class LivingEntityMixin {
 
 	@ModifyArg(
 		method = "updateWalkAnimation",
+
+
+
 		at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/WalkAnimationState;update(FF)V"),
 		index = 1
 	)
@@ -65,6 +78,9 @@ abstract class LivingEntityMixin {
 	 * floats when swimming, instead of vanilla's water physics, which stop it dead in any depth. A skeleton horse keeps
 	 * vanilla's and walks along the bottom.
 	 */
+
+
+
 	@ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isAffectedByFluids()Z"))
 	private boolean horsingaround$ownWaterPhysics(final boolean vanilla) {
 		if (!vanilla || !((Object) this instanceof RideStateHolder holder) || !holder.horsingaround$playerRidden()) {
@@ -74,6 +90,7 @@ abstract class LivingEntityMixin {
 		return !(horse.isInWater() && !horse.isInLava() && Mounts.floats(horse));
 	}
 
+
 	// Before 1.21.5 vanilla slows by 2% a tick anything whose AI doesn't run on this side, the horse its own rider's client
 	// moves included (from 1.21.5 it asks who moves it): left in, a ridden horse ran and jumped short of what the ride plans.
 	@ModifyExpressionValue(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isEffectiveAi()Z", ordinal = 0))
@@ -81,6 +98,7 @@ abstract class LivingEntityMixin {
 		return effective || (Object) this instanceof RideStateHolder holder && holder.horsingaround$playerRidden()
 			&& ((LivingEntity) (Object) this).isControlledByLocalInstance();
 	}
+
 
 	/** Vanilla air control is half of what is needed to hold ground speed, so every jump bled momentum. */
 	@ModifyReturnValue(method = "getFlyingSpeed", at = @At("RETURN"))

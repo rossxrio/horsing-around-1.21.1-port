@@ -2,8 +2,10 @@ package dev.horsingaround.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.horsingaround.ride.RideState;
+
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.ItemStack;
+
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -31,12 +33,14 @@ public interface RidePoseState {
 
 	boolean horsingaround$isRider();
 
+
 	// Before 1.21.11 the humanoid render state has neither the held stacks nor the draw time in part-ticks.
 	void horsingaround$setHeld(ItemStack right, ItemStack left, float usingTicks);
 
 	ItemStack horsingaround$held(HumanoidArm arm);
 
 	float horsingaround$usingTicks();
+
 
 	float horsingaround$handBob();
 

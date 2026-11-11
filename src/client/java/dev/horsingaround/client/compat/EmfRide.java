@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
+
 import traben.entity_model_features.models.parts.EMFModelPartRoot;
 
 /**
@@ -23,6 +24,10 @@ public final class EmfRide {
 	private static final float SADDLE_X = 0.0F;
 	private static final float SADDLE_Y = 3.0F;
 	private static final float SADDLE_Z = -1.0F;
+
+
+
+
 
 	private final @Nullable ModelPart leftFront;
 	private final @Nullable ModelPart rightFront;
@@ -45,6 +50,12 @@ public final class EmfRide {
 	 * of its own, and this is left empty in the body's).
 	 */
 	private final @Nullable ModelPart bridleNeck;
+
+
+
+
+
+
 
 	/** Looks up the model's parts: once the pack has set them (on 1.20.2 to 1.20.6, those of the variant in force). */
 	public EmfRide(final ModelPart root) {
@@ -94,6 +105,20 @@ public final class EmfRide {
 		final RideStateHolder holder = (RideStateHolder) entity;
 		final RideState ride = holder.horsingaround$ride();
 		final float partialTicks = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		AnimatedHorseModel.legs(root, 16.0F / root.yScale, this.leftFront, this.rightFront, this.leftHind, this.rightHind, ride, partialTicks);
 		AnimatedHorseModel.tail(this.tail, ride, partialTicks);
 		// (Applied after the pack so its own neck logic isn't disturbed, and on every layer: each has its own neck, and
@@ -120,6 +145,9 @@ public final class EmfRide {
 
 	/** The model's own (vanilla) part named {@code name}, not the pack's. */
 	private static @Nullable ModelPart vanilla(final ModelPart root, final String name) {
+
 		return ((EMFModelPartRoot) root).getAllVanillaPartsByNameEMF().get(name);
+
+
 	}
 }

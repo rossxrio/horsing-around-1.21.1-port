@@ -38,12 +38,14 @@ public abstract class SpeedAbilitiesMixin {
 		if (horse.getControllingPassenger() == null || RideStateHolder.managedRide(horse) == null) {
 			return;
 		}
+
 		final AttributeInstance speed = horse.getAttribute(Attributes.MOVEMENT_SPEED);
 		if (speed != null) {
 			for (final ResourceLocation bonus : BONUSES) {
 				speed.removeModifier(bonus);
 			}
 		}
+
 		ci.cancel();
 	}
 }

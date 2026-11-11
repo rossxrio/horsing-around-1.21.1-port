@@ -349,7 +349,10 @@ public final class Awareness {
 		cellZ0 = Mth.floor(horse.getZ()) - CELLS / 2;
 		planStamp++;
 		// How the ground under it grips (as vanilla moves an entity), and how it is moving now, along and across the line.
+
 		wayGrip = horse.level().getBlockState(horse.getBlockPosBelowThatAffectsMyMovement()).getBlock().getFriction() * 0.91F;
+
+
 		final Vec3 moving = horse.getDeltaMovement();
 		wayVelU = (float) (moving.x * wayFx + moving.z * wayFz);
 		wayVelV = (float) (-moving.x * wayFz + moving.z * wayFx);
@@ -1787,6 +1790,7 @@ public final class Awareness {
 		}
 		return area / ((box.maxX - box.minX) * (box.maxZ - box.minZ));
 	}
+
 
 	/**
 	 * A jump now would carry the horse off a drop or into a hazard with no safe landing in reach, or (down a slope)

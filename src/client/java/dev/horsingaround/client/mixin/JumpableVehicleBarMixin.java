@@ -4,11 +4,19 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import dev.horsingaround.ride.RideState;
 import dev.horsingaround.ride.RideStateHolder;
+
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+
+
+
+
+
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.entity.PlayerRideableJumping;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.spongepowered.asm.mixin.Final;
@@ -16,17 +24,30 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
+
 /** The horse jump bar becomes the stamina bar, drawn with the vanilla jump bar sprites. */
+
+
+
+
 @Mixin(Gui.class)
 public abstract class JumpableVehicleBarMixin {
+
+
 	@Unique
 	private static final ResourceLocation BACKGROUND = ResourceLocation.withDefaultNamespace("hud/jump_bar_background");
 	@Unique
 	private static final ResourceLocation EXHAUSTED_BACKGROUND = ResourceLocation.withDefaultNamespace("hud/jump_bar_cooldown");
 	@Unique
 	private static final ResourceLocation PROGRESS = ResourceLocation.withDefaultNamespace("hud/jump_bar_progress");
+
+
+
+
+
 	@Unique
 	private static final int EXHAUSTED_TINT = 0xFFFF7A6E;
+
 	// EXHAUSTED_TINT, as the colour setting of the old sprite draw takes it.
 	@Unique
 	private static final float EXHAUSTED_TINT_RED = 1.0F;
@@ -34,6 +55,7 @@ public abstract class JumpableVehicleBarMixin {
 	private static final float EXHAUSTED_TINT_GREEN = 0x7A / 255.0F;
 	@Unique
 	private static final float EXHAUSTED_TINT_BLUE = 0x6E / 255.0F;
+
 	@Unique
 	private static final int WIDTH = 182;
 	@Unique
@@ -42,6 +64,41 @@ public abstract class JumpableVehicleBarMixin {
 	@Shadow
 	@Final
 	private Minecraft minecraft;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	@WrapMethod(method = "renderJumpMeter")
 	private void horsingaround$staminaBar(final PlayerRideableJumping jumpable, final GuiGraphics graphics, final int left, final Operation<Void> original) {
@@ -64,4 +121,30 @@ public abstract class JumpableVehicleBarMixin {
 			}
 		}
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

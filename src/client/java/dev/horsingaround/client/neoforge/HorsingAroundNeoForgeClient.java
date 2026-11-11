@@ -14,6 +14,9 @@ import dev.horsingaround.net.StylePayload;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+
+
+
 import net.minecraft.client.resources.PlayerSkin;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -26,6 +29,9 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+
+
+
 import dev.horsingaround.neoforge.HorsingAroundNeoForge;
 import net.neoforged.neoforge.common.NeoForge;
 
@@ -35,10 +41,20 @@ public final class HorsingAroundNeoForgeClient {
 	public HorsingAroundNeoForgeClient(final IEventBus modBus, final ModContainer mod) {
 		// (On the main thread once every mod is loaded: the Entity Model Features hook needs that mod set up.)
 		modBus.addListener(FMLClientSetupEvent.class, event -> event.enqueueWork(HorsingAroundClient::init));
+
+
+
+
+
+
+
 		HorsingAroundNeoForge.clientRules = (rules, context) -> HorsingAroundClient.acceptRules(rules);
 		HorsingAroundNeoForge.clientStyle = (style, context) -> ServerRules.accept(style);
 		HorsingAroundNeoForge.clientHats = (hat, context) -> Hats.receive(hat);
+
 		modBus.addListener(RegisterKeyMappingsEvent.class, event -> {
+
+
 			event.register(HorsingAroundClient.SETTINGS_KEY);
 			event.register(HorsingAroundClient.SWAP_SHOULDER_KEY);
 		});
@@ -59,11 +75,18 @@ public final class HorsingAroundNeoForgeClient {
 
 	/** The supporters' cowboy hat, on players and mannequins. */
 	private static void addHatLayers(final EntityRenderersEvent.AddLayers event) {
+
+
+
+
+
+
 		for (final PlayerSkin.Model skin : event.getSkins()) {
 			if (event.getSkin(skin) instanceof PlayerRenderer player) {
 				addHatLayer(player, event.getEntityModels());
 			}
 		}
+
 	}
 
 	private static void addHatLayer(final PlayerRenderer renderer, final EntityModelSet models) {

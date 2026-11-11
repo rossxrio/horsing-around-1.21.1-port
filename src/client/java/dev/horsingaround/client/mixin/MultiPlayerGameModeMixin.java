@@ -1,10 +1,12 @@
 package dev.horsingaround.client.mixin;
 
+
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import dev.horsingaround.client.RideAim;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
 import org.spongepowered.asm.mixin.injection.At;
+
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import org.spongepowered.asm.mixin.Mixin;
 
@@ -14,6 +16,7 @@ import org.spongepowered.asm.mixin.Mixin;
  */
 @Mixin(MultiPlayerGameMode.class)
 public abstract class MultiPlayerGameModeMixin {
+
 	@ModifyArg(
 		method = "startPrediction",
 		at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V")
@@ -22,6 +25,10 @@ public abstract class MultiPlayerGameModeMixin {
 		if (!(packet instanceof ServerboundUseItemPacket use) || !RideAim.isActive()) {
 			return packet;
 		}
+
+
+
 		return new ServerboundUseItemPacket(use.getHand(), use.getSequence(), RideAim.yaw(), RideAim.pitch());
 	}
+
 }
