@@ -118,6 +118,13 @@ tasks.named('processResources') {
 }
 
 jar {
+	// (The manifest upstream's Stonecutter build writes, which this source is the 1.21.1-neoforge node of.)
+	manifest.attributes([
+		'Stonecutter-Plugin-Version': '0.9.8',
+		'Stonecutter-Gradle-Version': '9.7.1',
+		'Stonecutter-Node-Project': '1.21.1-neoforge',
+		'Stonecutter-Node-Version': '1.21.1'
+	])
 	from sourceSets.client.output
 	from(files('COPYING', 'COPYING.LESSER')) {
 		rename { "${it}_horsingaround" }

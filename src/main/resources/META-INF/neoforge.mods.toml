@@ -1,4 +1,4 @@
-# The mod metadata; build.gradle fills in the version.
+# The NeoForge jars' mod metadata (fabric.mod.json is the Fabric jars'); filled in by build.neoforge.gradle.
 modLoader = "javafml"
 loaderVersion = "[1,)"
 license = "LGPL-3.0-only"
