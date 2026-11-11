@@ -41,7 +41,15 @@ configurations {
 def auditDir = { String side -> layout.buildDirectory.dir("run/audit/${side}").get().asFile }
 
 neoForge {
-	version = project.neoforge_version
+	enable {
+		version = project.neoforge_version
+		// Compile against Minecraft's own classes (binary-patched), not a decompiled and recompiled copy. Upstream's
+		// releases are built so (on CI, where ModDevGradle turns recompilation off), and the two differ in what javac
+		// sees: vanilla's bridge methods carry no ACC_BRIDGE flag, so javac adds bridges of its own to subclasses (e.g.
+		// HorseSettingsScreen$TackList.getFocused). -PminecraftSources recompiles, for browsing the game's source in an
+		// IDE; jars built so are not the release's.
+		disableRecompilation = !project.hasProperty('minecraftSources')
+	}
 	addModdingDependenciesTo sourceSets.client
 
 	mods {
