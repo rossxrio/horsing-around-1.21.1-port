@@ -59,6 +59,10 @@ neoForge {
 		client {
 			client()
 			gameDirectory = project.file('run')
+			// -Pconnect=<host[:port]>: join that server straight from launch (e.g. -Pconnect=localhost with runServer up).
+			if (project.hasProperty('connect')) {
+				programArguments.addAll('--quickPlayMultiplayer', project.property('connect').toString())
+			}
 		}
 		server {
 			server()
