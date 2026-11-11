@@ -38,6 +38,8 @@ configurations {
 	clientRuntimeOnly.extendsFrom runtimeOnly
 }
 
+def auditDir = { String side -> layout.buildDirectory.dir("run/audit/${side}").get().asFile }
+
 neoForge {
 	version = project.neoforge_version
 	addModdingDependenciesTo sourceSets.client
@@ -62,6 +64,20 @@ neoForge {
 			server()
 			gameDirectory = project.file('run/server')
 			programArgument '--nogui'
+		}
+		// ./gradlew auditMixins (below)
+		auditClient {
+			client()
+			gameDirectory = auditDir('client')
+			systemProperty 'horsingaround.audit', 'true'
+			systemProperty 'mixin.debug.countInjections', 'true'
+		}
+		auditServer {
+			server()
+			gameDirectory = auditDir('server')
+			programArgument '--nogui'
+			systemProperty 'horsingaround.audit', 'true'
+			systemProperty 'mixin.debug.countInjections', 'true'
 		}
 	}
 }
@@ -96,3 +112,36 @@ jar {
 	}
 }
 
+// ./gradlew auditMixins: a dev client and a dedicated server each load every class the mixins patch (MixinAudit), then
+// quit. Fails unless both report the audit passed and nothing in the log names a mixin failure.
+def auditRuns = ['Client', 'Server']
+auditRuns.eachWithIndex { side, i ->
+	def dir = auditDir(side.toLowerCase())
+	tasks.named("runAudit${side}") {
+		group = 'verification'
+		if (i > 0) mustRunAfter "runAudit${auditRuns[i - 1]}"
+		doFirst {
+			new File(dir, 'logs').deleteDir()
+			dir.mkdirs()
+			new File(dir, 'eula.txt').text = 'eula=true\n'
+			if (side == 'Client') {
+				new File(dir, 'options.txt').text = 'soundCategory_master:0.0\n'
+			} else {
+				new File(dir, 'server.properties').text = 'server-port=0\n'
+			}
+		}
+		doLast {
+			def log = new File(dir, 'logs/latest.log')
+			def text = log.exists() ? log.text : ''
+			def problems = text.readLines().findAll { it =~ /Mixin apply for mod|Mixin apply failed|Injection validation failed|could not find any targets|InvalidInjectionException|InvalidMixinException|MixinApplyError|MixinTransformerError|Critical injection failure/ }
+			if (!text.contains('Horsing Around mixin audit passed') || !problems.isEmpty()) {
+				throw new GradleException("Mixin audit failed (${side.toLowerCase()}); see ${log}\n" + problems.take(20).join('\n'))
+			}
+			logger.lifecycle("Mixin audit passed (${side.toLowerCase()}).")
+		}
+	}
+}
+tasks.register('auditMixins') {
+	group = 'verification'
+	dependsOn auditRuns.collect { "runAudit${it}" }
+}
