@@ -1,0 +1,86 @@
+package dev.horsingaround.client.cosmetic;
+
+import dev.horsingaround.net.HatPayload;
+import dev.horsingaround.net.PlayerHatPayload;
+import dev.horsingaround.net.ServerRules;
+import dev.horsingaround.ride.HorseConfig;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.player.Player;
+
+/**
+ * Who wears a cowboy hat, in what colour: your own from your settings, everyone else's as the server passes it on.
+ * Only players on the supporters list are drawn with one. Client thread.
+ */
+public final class Hats {
+	private static final Map<UUID, Integer> WORN = new HashMap<>();
+	/** The signed-in account's id (null when the launcher gave one that isn't a UUID), read once: before 1.20.2 each read parses text. */
+	private static UUID account;
+	private static boolean accountRead;
+
+	private Hats() {
+	}
+
+	/** The hat colour to draw on this player, or {@link HatPayload#NONE}. */
+	public static int colorFor(final Player player) {
+		if (player instanceof LocalPlayer) {
+			return canWear() ? ownHat() : HatPayload.NONE;
+		}
+		// (No one on this server wears one, the usual case: no lookups at all.)
+		if (WORN.isEmpty() || !Supporters.isSupporter(player.getUUID())) {
+			return HatPayload.NONE;
+		}
+		final Integer color = WORN.get(player.getUUID());
+		return color == null ? HatPayload.NONE : color;
+	}
+
+	/** Whether the local player can wear the hat (is on the supporters list). */
+	public static boolean canWear() {
+		final Minecraft minecraft = Minecraft.getInstance();
+		if (!accountRead) {
+			account = minecraft.getUser().getProfileId();
+			accountRead = true;
+		}
+		return account != null && Supporters.isSupporter(account)
+			|| minecraft.player != null && Supporters.isSupporter(minecraft.player.getUUID());
+	}
+
+	private static int ownHat() {
+		final HorseConfig c = HorseConfig.get();
+		return c.hat ? c.hatColor & 0xFFFFFF : HatPayload.NONE;
+	}
+
+	public static void receive(final PlayerHatPayload hat) {
+		if (hat.color() == HatPayload.NONE) {
+			WORN.remove(hat.player());
+		} else {
+			WORN.put(hat.player(), hat.color());
+			// (Someone who only just became a supporter: their hat is drawn as soon as the fresh list arrives.)
+			if (!Supporters.isSupporter(hat.player())) {
+				Supporters.refreshSoon();
+			}
+		}
+	}
+
+	/** Tells the server what we're wearing (on joining and after changing it in the settings). */
+	public static void sendOwn() {
+		final ClientPacketListener connection = Minecraft.getInstance().getConnection();
+		if (ServerRules.present && connection != null && connection.hasChannel(HatPayload.TYPE)) {
+			connection.send(new HatPayload(canWear() ? ownHat() : HatPayload.NONE));
+		}
+	}
+
+	public static void clear() {
+		WORN.clear();
+	}
+
+	/** For tests: the colour the server last passed on for this player. */
+	public static int relayed(final UUID player) {
+		final Integer color = WORN.get(player);
+		return color == null ? HatPayload.NONE : color;
+	}
+}

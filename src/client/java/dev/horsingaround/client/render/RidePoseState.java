@@ -1,0 +1,104 @@
+package dev.horsingaround.client.render;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import dev.horsingaround.ride.RideState;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
+
+/**
+ * Implemented on {@code LivingEntityRenderState} by mixin: an extra world-space translate + rotate about a pivot, and
+ * for riders, the limb pose inputs (reins, stirrups, torso twist).
+ */
+public interface RidePoseState {
+	void horsingaround$clearPose();
+
+	void horsingaround$setPose(float tx, float ty, float tz, float qx, float qy, float qz, float qw, float px, float py, float pz);
+
+	void horsingaround$applyPose(PoseStack poseStack);
+
+	/**
+	 * @param legPitch radians to tip the legs (top-back positive) so they hold still against the saddle while the
+	 *                 torso rocks, leans and pumps
+	 * @param legRoll  same for roll (top-right positive)
+	 * @param shield   how far a hand is up in front of the face against leaves, 0..1
+	 * @param bowRelease how far through the follow-through of a bow just loosed, 1 (just loosed) to 0 (none)
+	 * @param bowPull  how far that bow was drawn, 0..1
+	 */
+	void horsingaround$setRider(
+		float handBob, float legPitch, float legRoll, float twistRadians, float pelvis, float shield, float bowRelease, float bowPull
+	);
+
+	boolean horsingaround$isRider();
+
+	// Before 1.21.11 the humanoid render state has neither the held stacks nor the draw time in part-ticks.
+	void horsingaround$setHeld(ItemStack right, ItemStack left, float usingTicks);
+
+	ItemStack horsingaround$held(HumanoidArm arm);
+
+	float horsingaround$usingTicks();
+
+	float horsingaround$handBob();
+
+	float horsingaround$legPitch();
+
+	float horsingaround$legRoll();
+
+	float horsingaround$twist();
+
+	/** How far a hand is up in front of the face against leaves, 0..1. */
+	float horsingaround$shield();
+
+	/** Torso swing from the shoulders (radians, negative slides the pelvis forward). */
+	float horsingaround$pelvis();
+
+	/** How far through the follow-through of a bow just loosed, 1 to 0 (0: none). */
+	float horsingaround$bowRelease();
+
+	/** How far the bow just loosed was drawn, 0..1. */
+	float horsingaround$bowPull();
+
+	/** Head toss for a horse that just ran out of stamina: neck yaw and roll, radians. */
+	void horsingaround$setHeadShake(float yaw, float roll);
+
+	float horsingaround$headShakeYaw();
+
+	float horsingaround$headShakeRoll();
+
+	/** Neck pitch (radians, nose down positive) countering the body's slope pitch; vanilla model only. */
+	void horsingaround$setNeck(float pitch);
+
+	float horsingaround$neckPitch();
+
+	/**
+	 * Hooves on the ground (see {@link GroundLegs}): whether the model's own hook poses them (the vanilla model; an
+	 * animation pack's hook poses them after the pack has run), the body's tilt (radians), and how far the front and hind
+	 * legs draw up onto higher ground where the model hasn't been drawn yet (blocks).
+	 */
+	void horsingaround$setLegs(boolean here, float tilt, float fore, float hind);
+
+	boolean horsingaround$legsHere();
+
+	float horsingaround$legTilt();
+
+	/** The ridden horse's own ride state (null for anything else), so the legs can find the ground under each hoof. */
+	void horsingaround$setRide(@Nullable RideState ride);
+
+	@Nullable RideState horsingaround$rideState();
+
+	float horsingaround$foreLeg();
+
+	float horsingaround$hindLeg();
+
+	/** Tail lift from its swing, radians (up positive); vanilla model only. */
+	void horsingaround$setTail(float lift);
+
+	float horsingaround$tail();
+
+	/** Legs in a jump: how far in its shape (0..1), and climbing (1) to falling (-1); vanilla model only. */
+	void horsingaround$setAirLegs(float air, float rise);
+
+	float horsingaround$airLegs();
+
+	float horsingaround$airRise();
+}

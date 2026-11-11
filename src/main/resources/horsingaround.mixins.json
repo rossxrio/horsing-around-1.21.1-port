@@ -1,0 +1,19 @@
+{
+	"required": true,
+	"package": "dev.horsingaround.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": [
+		"AbstractHorseMixin",
+		"AbstractHorseSpeedMixin",
+		"BlockBehaviourMixin",
+		"EntityMixin",
+		"LivingEntityMixin",
+		"PowderSnowBlockMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}

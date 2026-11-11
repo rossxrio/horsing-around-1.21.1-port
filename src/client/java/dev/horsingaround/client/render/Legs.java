@@ -1,0 +1,182 @@
+package dev.horsingaround.client.render;
+
+import java.util.List;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.util.Mth;
+import org.jetbrains.annotations.Nullable;
+
+/**
+ * A horse model's leg as vanilla draws it: one rigid box, turned about its top. Models pivot legs in different places
+ * (vanilla at the top of the leg, Fresh Animations near the hoof, animating the stride by moving the hoof and turning the
+ * leg about it), so every swing here turns a leg about the top of its box, moving the pivot to keep the top where the
+ * model put it; and a leg is shortened by drawing it up into the body along its own length (the way a horse folds at the
+ * shoulder, elbow and knee). The model's boxes are only measured, never changed. Render thread only.
+ */
+public final class Legs {
+	/** A leg's shape, in the leg part's own frame (model pixels, y down, z toward the tail). */
+	public static final class Leg {
+		/** The middle of the box across, and half its depth along z. */
+		final float soleX;
+		final float soleHalf;
+		/** The middle of the top of the box and of its sole. */
+		final float hipY;
+		final float soleY;
+		final float z;
+		final float length;
+
+		Leg(final float soleX, final float soleHalf, final float hipY, final float soleY, final float z) {
+			this.soleX = soleX;
+			this.soleHalf = soleHalf;
+			this.hipY = hipY;
+			this.soleY = soleY;
+			this.z = z;
+			this.length = soleY - hipY;
+		}
+	}
+
+	/** Kept on a part with no leg box (see PartData), so it is measured once. */
+	private static final Leg NONE = new Leg(0.0F, 0.0F, 0.0F, 1.0F, 0.0F);
+	/** Frames a leg was drawn up onto higher ground (for tests). */
+	public static int drawnFrames;
+
+	private Legs() {
+	}
+
+	/** The leg's shape (measured the first time); null if the part has no leg box. */
+	public static @Nullable Leg of(final ModelPart part) {
+		final PartData data = (PartData) (Object) part;
+		Leg leg = data.horsingaround$leg();
+		if (leg == null) {
+			leg = find(part, 0.0F, 0.0F, 0.0F, 0);
+			data.horsingaround$setLeg(leg == null ? NONE : leg);
+		}
+		return leg == NONE ? null : leg;
+	}
+
+	/**
+	 * Measures a leg built of parts hung one under another (Realistic Horse Genetics' thigh, shin and hoof) as one leg
+	 * standing straight, from the top of the top part's box to the sole of the lowest box under it, and keeps that as the
+	 * top part's leg for {@link #of}. Only for a model known to be built so: an animation pack's parts under a leg aren't
+	 * always more of it. Null if the part has no leg box.
+	 */
+	public static @Nullable Leg chain(final ModelPart top) {
+		final PartData data = (PartData) (Object) top;
+		Leg leg = data.horsingaround$leg();
+		if (leg == null) {
+			final Leg own = find(top, 0.0F, 0.0F, 0.0F, 0);
+			final Leg hoof = own == null ? null : lowest(top, 0.0F, 0.0F, 0.0F, 0, null);
+			leg = hoof == null ? NONE : new Leg(hoof.soleX, hoof.soleHalf, own.hipY, hoof.soleY, hoof.z);
+			data.horsingaround$setLeg(leg);
+		}
+		return leg == NONE ? null : leg;
+	}
+
+	/** The sole of the lowest box in the part or the parts hung straight under it (offset {@code dx}, {@code dy}, {@code dz}), as a leg with no top. */
+	private static @Nullable Leg lowest(final ModelPart part, final float dx, final float dy, final float dz, final int depth, @Nullable Leg best) {
+		final PartData access = (PartData) (Object) part;
+		for (final ModelPart.Cube cube : access.horsingaround$cubes()) {
+			final float sole = dy + extent(cube, false, 1);
+			if (sixSided(cube) && (best == null || sole > best.soleY)) {
+				best = new Leg(
+					dx + (extent(cube, true, 0) + extent(cube, false, 0)) * 0.5F, (extent(cube, false, 2) - extent(cube, true, 2)) * 0.5F, 0.0F, sole,
+					dz + (extent(cube, true, 2) + extent(cube, false, 2)) * 0.5F
+				);
+			}
+		}
+		if (depth < 3) {
+			for (final ModelPart child : access.horsingaround$children().values()) {
+				final PartPose pose = child.getInitialPose();
+				if (pose.xRot == 0.0F && pose.yRot == 0.0F && pose.zRot == 0.0F) {
+					best = lowest(child, dx + pose.x, dy + pose.y, dz + pose.z, depth + 1, best);
+				}
+			}
+		}
+		return best;
+	}
+
+	/** Turns the leg part to {@code xRot} about the top of the leg, which stays where it was. */
+	public static void swing(final ModelPart part, final Leg leg, final float xRot) {
+		float cos = Mth.cos(part.xRot);
+		float sin = Mth.sin(part.xRot);
+		final float topY = part.y + leg.hipY * cos - leg.z * sin;
+		final float topZ = part.z + leg.hipY * sin + leg.z * cos;
+		cos = Mth.cos(xRot);
+		sin = Mth.sin(xRot);
+		part.xRot = xRot;
+		part.y = topY - (leg.hipY * cos - leg.z * sin);
+		part.z = topZ - (leg.hipY * sin + leg.z * cos);
+	}
+
+	/** Draws the leg {@code pixels} up into the body along its own length. */
+	public static void draw(final ModelPart part, final float pixels) {
+		part.y -= pixels * Mth.cos(part.xRot);
+		part.z -= pixels * Mth.sin(part.xRot);
+	}
+
+	/**
+	 * Finds the leg's box in the part or a part under it (offset {@code dx}, {@code dy}, {@code dz} from the leg part, not
+	 * turned): the tallest six-sided box.
+	 */
+	private static @Nullable Leg find(final ModelPart part, final float dx, final float dy, final float dz, final int depth) {
+		final PartData access = (PartData) (Object) part;
+		final List<ModelPart.Cube> cubes = access.horsingaround$cubes();
+		ModelPart.Cube best = null;
+		float bestHeight = 0.0F;
+		for (final ModelPart.Cube cube : cubes) {
+			final float height = extent(cube, false, 1) - extent(cube, true, 1);
+			if (sixSided(cube) && height > bestHeight) {
+				best = cube;
+				bestHeight = height;
+			}
+		}
+		if (best != null) {
+			// (A leg built of boxes stacked one on another, as Icy's Better Horses' hind legs are: it reaches from the top of the
+			// highest to the sole of the lowest, the hoof.)
+			ModelPart.Cube hoof = best;
+			float hipY = extent(best, true, 1);
+			for (final ModelPart.Cube cube : cubes) {
+				if (cube != best && sixSided(cube) && extent(cube, true, 0) < extent(best, false, 0) && extent(cube, false, 0) > extent(best, true, 0)) {
+					hipY = Math.min(hipY, extent(cube, true, 1));
+					if (extent(cube, false, 1) > extent(hoof, false, 1)) {
+						hoof = cube;
+					}
+				}
+			}
+			final float middleZ = (extent(hoof, true, 2) + extent(hoof, false, 2)) * 0.5F;
+			return new Leg(
+				dx + (extent(hoof, true, 0) + extent(hoof, false, 0)) * 0.5F, (extent(hoof, false, 2) - extent(hoof, true, 2)) * 0.5F, dy + hipY,
+				dy + extent(hoof, false, 1), dz + middleZ
+			);
+		}
+		if (depth < 2) {
+			for (final ModelPart child : access.horsingaround$children().values()) {
+				final PartPose pose = child.getInitialPose();
+				if (pose.xRot == 0.0F && pose.yRot == 0.0F && pose.zRot == 0.0F) {
+					final Leg leg = find(child, dx + pose.x, dy + pose.y, dz + pose.z, depth + 1);
+					if (leg != null) {
+						return leg;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * A box's least or greatest x, y or z (axis 0, 1, 2), as it was built before any growing (an armour layer's box is grown
+	 * a little, and every layer's legs must measure the same); from its corners if it doesn't say.
+	 */
+	private static float extent(final ModelPart.Cube cube, final boolean least, final int axis) {
+		if (cube.maxX > cube.minX && cube.maxY > cube.minY && cube.maxZ > cube.minZ) {
+			return axis == 0 ? (least ? cube.minX : cube.maxX) : axis == 1 ? (least ? cube.minY : cube.maxY) : least ? cube.minZ : cube.maxZ;
+		}
+		return axis == 0 ? (least ? cube.minX : cube.maxX) : axis == 1 ? (least ? cube.minY : cube.maxY) : least ? cube.minZ : cube.maxZ;
+	}
+
+	/** Whether the box has all six faces (a leg does; a flat plane or a part of a box doesn't). */
+	private static boolean sixSided(final ModelPart.Cube cube) {
+		// (Before 1.21.2 the faces are private; the boxes of vanilla and of animation packs have them all.)
+		return true;
+	}
+}

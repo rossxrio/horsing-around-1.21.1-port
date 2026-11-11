@@ -1,0 +1,30 @@
+{
+	"required": true,
+	"package": "dev.horsingaround.client.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"client": [
+		"CustomHeadLayerMixin", "HumanoidArmorLayerMixin",
+		"AbstractClientPlayerMixin",
+		"AbstractEquineModelMixin",
+		"CameraMixin",
+		"EntityRendererMixin",
+		"FirstPersonHandsMixin",
+		"HudMixin",
+		"HumanoidModelMixin",
+		"JumpableVehicleBarMixin",
+		"KeyMappingMixin",
+		"LivingEntityRenderStateMixin",
+		"LivingEntityRendererMixin",
+		"LocalPlayerMixin",
+		"ModelPartMixin",
+		"MultiPlayerGameModeMixin",
+		"PickMixin",
+		"PlayerModelMixin"
+	],
+	"injectors": {
+		"defaultRequire": 0
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}

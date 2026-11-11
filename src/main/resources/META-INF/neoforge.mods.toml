@@ -1,0 +1,42 @@
+# The mod metadata; build.gradle fills in the version.
+modLoader = "javafml"
+loaderVersion = "[1,)"
+license = "LGPL-3.0-only"
+issueTrackerURL = "https://github.com/GabePurc/horsing-around/issues/new?template=bug_report.yml"
+
+[[mods]]
+modId = "horsingaround"
+version = "${version}"
+displayName = "Horsing Around"
+authors = "GabePurc"
+displayURL = "https://github.com/GabePurc/horsing-around"
+logoFile = "assets/horsingaround/icon.png"
+description = '''
+Horses finally ride like real animals: gaits, momentum, stamina, sure footing and an over-the-shoulder camera, on the vanilla horse with the keys you already know.
+'''
+
+[[mixins]]
+config = "horsingaround.mixins.json"
+
+[[mixins]]
+config = "horsingaround.client.mixins.json"
+
+[[mixins]]
+config = "horsingaround.icy.mixins.json"
+
+[[mixins]]
+config = "horsingaround.icy.client.mixins.json"
+
+[[dependencies.horsingaround]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.1.0,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.horsingaround]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21.1,1.21.2)"
+ordering = "NONE"
+side = "BOTH"
