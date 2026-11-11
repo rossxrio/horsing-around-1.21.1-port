@@ -1,0 +1,98 @@
+plugins {
+	id 'java'
+	id 'net.neoforged.moddev' version '2.0.148'
+}
+
+// Horsing Around for Minecraft 1.21.1 on NeoForge, a single-version build of the upstream mod
+// (https://github.com/GabePurc/horsing-around, its 1.21.1-neoforge node).
+version = "${project.mod_version}+${project.minecraft_version}"
+base.archivesName = 'horsing-around-neoforge'
+
+java {
+	toolchain.languageVersion = JavaLanguageVersion.of(21)
+}
+
+repositories {
+	exclusiveContent {
+		forRepository {
+			maven {
+				name = 'Modrinth'
+				url = 'https://api.modrinth.com/maven'
+			}
+		}
+		filter {
+			includeGroup 'maven.modrinth'
+		}
+	}
+}
+
+// The client-only code has a source set of its own (src/client) and goes into the same jar.
+sourceSets {
+	client {
+		compileClasspath += main.output
+		runtimeClasspath += main.output
+	}
+}
+configurations {
+	clientCompileOnly.extendsFrom compileOnly
+	clientRuntimeOnly.extendsFrom runtimeOnly
+}
+
+neoForge {
+	version = project.neoforge_version
+	addModdingDependenciesTo sourceSets.client
+
+	mods {
+		"horsingaround" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+	}
+
+	runs {
+		configureEach {
+			sourceSet = sourceSets.client
+			loadedMods = [mods.horsingaround]
+		}
+		client {
+			client()
+			gameDirectory = project.file('run')
+		}
+		server {
+			server()
+			gameDirectory = project.file('run/server')
+			programArgument '--nogui'
+		}
+	}
+}
+
+dependencies {
+	// Optional integration: ride the horse's real animated body when Entity Model Features animates it.
+	compileOnly "maven.modrinth:entity-model-features:${project.emf_version}"
+	compileOnly "maven.modrinth:entitytexturefeatures:${project.etf_version}"
+	// Optional integration: the riding camera steps aside while Shoulder Surfing Reloaded drives the camera.
+	compileOnly "maven.modrinth:shoulder-surfing-reloaded:${project.shoulder_surfing_version}"
+
+	// Dev only: Entity Model Features and Entity Texture Features in the dev games, the upstream mod's target setup
+	// (leave them out with -Pplain).
+	if (!project.hasProperty('plain')) {
+		runtimeOnly "maven.modrinth:entity-model-features:${project.emf_version}"
+		runtimeOnly "maven.modrinth:entitytexturefeatures:${project.etf_version}"
+	}
+}
+
+def resourceProps = [version: project.version.toString()]
+tasks.named('processResources') {
+	inputs.properties resourceProps
+	filesMatching('META-INF/neoforge.mods.toml') {
+		expand resourceProps
+	}
+}
+
+jar {
+	from sourceSets.client.output
+	from(files('COPYING', 'COPYING.LESSER')) {
+		rename { "${it}_horsingaround" }
+	}
+}
+

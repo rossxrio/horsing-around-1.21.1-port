@@ -1,0 +1,13 @@
+pluginManagement {
+	repositories {
+		mavenCentral()
+		gradlePluginPortal()
+	}
+}
+
+plugins {
+	// Downloads a JDK 21 when the machine has none (installed JDKs are found automatically).
+	id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+}
+
+rootProject.name = 'horsing-around-neoforge'
